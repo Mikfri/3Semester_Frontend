@@ -9,13 +9,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
   <script src="https://unpkg.com/vue@next"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <!-- BOOTSTRAP5 -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>  
+  <!-- BOOTSTRAP5 -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="icon" href="images/Logo.png" type="image/x-icon">
   <!-- EXTERN CSS -->
   <link rel="stylesheet" href="css/site.css">
-      <!-- BOOTSTRAP CSS  -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">  
+  <!-- BOOTSTRAP CSS  -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <title>Zealand Connect</title>
 </head>
 
@@ -26,7 +26,16 @@
       <a class="navbar-brand" href="#">
         <img src="images/Logo.png" alt="ZealandConnect Logo" style="width:80px;" class="rounded-pill"></a>
     </div>
+    <div class="input-group mb-3 mt-3">
+      <form action="/action_page.php">
+        <input type="text" placeholder="Username" name="username">
+        <input type="text" placeholder="Password" name="psw">
+        <button type="submit">Login</button>
+      </form>
+    </div>
   </nav>
+
+  
 
   <!-- OVERSKRIFT LOGO -->
   <div class="text-center p-5">
@@ -51,18 +60,19 @@
     </div>
   </div>
 
-<br>
-<br>
-
-<div class="container mt-5">
+  <br><br>
+  <!-- TABLE SETUP -->
+  <div class="container mt-5">
     <table class="table table-dark table-bordered table-hover">
-      <tr>
-        <td>ID</td>
-        <td>Navn</td>
-        <td>Check Ind</td>
-        <td>Check Ud</td>
-        <td>Se Data</td>
-      </tr>
+      <thead class="table-warning">
+        <tr>
+          <td><b>Student ID</b></td>
+          <td><b>Navn</b></td>
+          <td><b>Check Ind</b></td>
+          <td><b>Check Ud</b></td>
+          <td><b>Se Data</b></td>
+        </tr>
+      </thead>
       <tr>
         <td>1</td>
         <td>Canty</td>
@@ -86,12 +96,5 @@
       </tr>
     </table>
   </div>
-  
-  
-  
-  
-  
-  
-  
 
 </body>
