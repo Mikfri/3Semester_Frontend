@@ -35,21 +35,23 @@
     </div>
   </nav>
 
-
+<br>
+<br>
 
   <!-- OVERSKRIFT LOGO -->
   <div class="text-center p-5">
     <img src="images/Logo.png" alt="ZealandConnect Logo">
   </div>
-  <br>
 
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-sm-3 text-center">
         <h5 class="text1">Mødt</h5>
+        <h6 class="text1" id="hereTodayCounter">0</h6>
       </div>
       <div class="col-sm-3 text-center">
         <h5 class="text1">Ikke Mødt</h5>
+        <h6 class="text1" id="notHereTodayCounter">0</h6>
       </div>
       <div class="col-sm-3 text-center">
         <h5 class="text1">Hej 3</h5>
@@ -60,42 +62,130 @@
     </div>
   </div>
 
-  <br><br>
+
+  <br>
   <!-- TABLE SETUP -->
   <div class="container mt-5">
-    <table class="table table-dark table-bordered table-hover">
-      <thead class="table-warning">
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="filterTable('all')">All</button>
+      <button class="btn btn-primary" onclick="filterTable('hereToday')">Here Today</button>
+      <button class="btn btn-primary" onclick="filterTable('notHereToday')">Not Here Today</button>
+    </div>
+    <div style="overflow-x: auto; height: 500px; max-height: 500px; background-color: rgb(41, 41, 41);">
+      <table class="table table-dark table-bordered table-hover">
+        <thead class="table-warning">
+          <tr>
+            <td><b>Student ID</b></td>
+            <td><b>Navn</b></td>
+            <td><b>Check Ind</b></td>
+            <td><b>Check Ud</b></td>
+            <td><b>Se Data</b></td>
+          </tr>
+        </thead>
         <tr>
-          <td><b>Student ID</b></td>
-          <td><b>Navn</b></td>
-          <td><b>Check Ind</b></td>
-          <td><b>Check Ud</b></td>
-          <td><b>Se Data</b></td>
+          <td>1</td>
+          <td>Canty</td>
+          <td>09:15</td>
+          <td>14:45</td>
+          <td>5:30</td>
         </tr>
-      </thead>
-      <tr>
-        <td>1</td>
-        <td>Canty</td>
-        <td>09:15</td>
-        <td>14:45</td>
-        <td>5:30</td>
-      </tr>
-      <tr>
-        <td>2</td>
-        <td>Mads</td>
-        <td>09:00</td>
-        <td>14:00</td>
-        <td>5:00</td>
-      </tr>
-      <tr>
-        <td>3</td>
-        <td>Babz</td>
-        <td>08:45</td>
-        <td>14:45</td>
-        <td>6:00</td>
-      </tr>
-    </table>
-  </div>
+        <tr>
+          <td>2</td>
+          <td>Mads</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Babz</td>
+          <td>08:45</td>
+          <td>14:45</td>
+          <td>6:00</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>John</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Alice</td>
+          <td>10:30</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Bob</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Eva</td>
+          <td>08:00</td>
+          <td>15:15</td>
+          <td>7:15</td>
+        </tr>
+        <!-- Additional mock data -->
+        <tr>
+          <td>8</td>
+          <td>Lisa</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Sam</td>
+          <td>11:00</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Grace</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>Tom</td>
+          <td>08:30</td>
+          <td>14:30</td>
+          <td>6:00</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>Nancy</td>
+          <td>10:15</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>Chris</td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>Olivia</td>
+          <td>09:00</td>
+          <td>15:30</td>
+          <td>6:30</td>
+        </tr>
+      </table>
+    </div>
+    
+
+  <script src="js/studenttable.js"></script>
 
   <br>
 
@@ -105,39 +195,55 @@
 
     <script>
       const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
-    
+
+      const chartOptions = {
+        scales: {
+          y: {
+            ticks: {
+              color: 'white',
+            },
+            max: 25,
+          },
+          x: {
+            ticks: {
+              color: 'white',
+            },
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: 'white',
+            }
+          }
+        }
+      };
+
       new Chart("myChart", {
         type: "bar",
         data: {
           labels: xValues,
-          datasets: [{
-            data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
-            backgroundColor: 'rgb(50, 150, 150)',
-            borderColor: 'rgb(75, 192, 192)',
-            borderWidth: 3,
-            label: "Showed up",
-            fill: false
-          }, {
-            data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
-            backgroundColor: 'rgb(255, 0, 0)',
-            borderColor: 'rgb(255, 100, 100)',
-            borderWidth: 3,
-            label: "Lazy",
-            fill: false
-          }]
+          datasets: [
+            {
+              data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
+              backgroundColor: 'rgb(50, 150, 150)',
+              borderColor: 'rgb(75, 192, 192)',
+              borderWidth: 3,
+              label: "Showed up",
+              fill: false
+            },
+            {
+              data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
+              backgroundColor: 'rgb(255, 0, 0)',
+              borderColor: 'rgb(255, 100, 100)',
+              borderWidth: 3,
+              label: "Lazy",
+              fill: false
+            }
+          ],
         },
-        options: {
-          scales: {
-            y: {
-              max: 25
-            }
-          },
-          plugins: {
-            legend: {
-              display: true
-            }
-          }
-        }
+        options: chartOptions,
       });
     </script>
   </div>
@@ -171,21 +277,12 @@
             fill: false
           }]
         },
-        options: {
-          scales: {
-            y: {
-              max: 25
-            }
-          },
-          plugins: {
-            legend: {
-              display: true
-            }
-          }
-        }
+        options: chartOptions,
       });
     </script>
   </div>
-
-
+<br>
+</br>
 </body>
+<footer>
+</footer>

@@ -12,3 +12,24 @@ body {
 .text1 {
     color: rgb(255, 255, 255)
 }
+
+
+.chart-container {
+  margin-top: 5%;
+}
+
+.chart-title {
+  color: white;
+}
+
+.chart-canvas {
+  width: 100%;
+}
+
+.chart-labels {
+  color: white;
+}
+
+.chart-legend {
+  display: true;
+}
