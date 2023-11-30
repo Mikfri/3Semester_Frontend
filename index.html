@@ -70,6 +70,11 @@
       <button class="btn btn-primary" onclick="filterTable('all')">All</button>
       <button class="btn btn-primary" onclick="filterTable('hereToday')">Here Today</button>
       <button class="btn btn-primary" onclick="filterTable('notHereToday')">Not Here Today</button>
+          <form action="/search" method="get">
+        <label for="search">Search:</label>
+        <input type="text" id="search" name="q" placeholder="Enter your search terms">
+        <button type="submit">Search</button>
+    </form>
     </div>
     <div style="overflow-x: auto; height: 500px; max-height: 500px; background-color: rgb(41, 41, 41);">
       <table class="table table-dark table-bordered table-hover">

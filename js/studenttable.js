@@ -61,5 +61,3 @@ function updateCounter(counterType, count) {
     counterElement.textContent = count.toString(); // Convert count to string and update the text content
   }
 }
-
-// ... (remaining code)
