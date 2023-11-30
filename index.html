@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <!-- SCRIPTs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/vue@next"></script>
   <!-- BOOTSTRAP5 -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -105,7 +105,7 @@
 
     <script>
       const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
-
+    
       new Chart("myChart", {
         type: "bar",
         data: {
@@ -122,20 +122,20 @@
             backgroundColor: 'rgb(255, 0, 0)',
             borderColor: 'rgb(255, 100, 100)',
             borderWidth: 3,
-            label: "No Show",
+            label: "Lazy",
             fill: false
           }]
         },
         options: {
           scales: {
-            yAxes: [{
-              ticks: {
-                max: 25
-              }
-            }]
+            y: {
+              max: 25
+            }
           },
-          legend: {
-            display: true
+          plugins: {
+            legend: {
+              display: true
+            }
           }
         }
       });
@@ -173,19 +173,19 @@
         },
         options: {
           scales: {
-            yAxes: [{
-              ticks: {
-                max: 25
-              }
-            }]
+            y: {
+              max: 25
+            }
           },
-          legend: {
-            display: true
+          plugins: {
+            legend: {
+              display: true
+            }
           }
         }
       });
     </script>
   </div>
 
-  
+
 </body>
