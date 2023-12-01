@@ -13,23 +13,24 @@ body {
     color: rgb(255, 255, 255)
 }
 
-
-.chart-container {
-  margin-top: 5%;
+.table {
+    text-align: center;
 }
 
-.chart-title {
-  color: white;
-}
+.btn-filter {
+    background-color: #3498db; /* Set your desired background color for the buttons */
+    color: #ffffff; /* Set text color for the buttons */
+    margin-right: 5px; /* Adjust spacing between buttons */
+  }
 
-.chart-canvas {
-  width: 100%;
-}
+  .btn-filter:hover {
+    background-color: #2980b9; /* Set hover background color for the buttons */
+  }
 
-.chart-labels {
-  color: white;
-}
+  .btn-filter:focus {
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.5); /* Add focus outline */
+  }
 
-.chart-legend {
-  display: true;
-}
+  .form-control {
+    margin-left: 5px; /* Adjust spacing between search input and button */
+  }

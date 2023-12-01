@@ -12,17 +12,17 @@
   <!-- BOOTSTRAP5 -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="icon" href="images/Logo.png" type="image/x-icon">
-  <!-- EXTERN CSS -->
-  <link rel="stylesheet" href="css/site.css">
   <!-- BOOTSTRAP CSS  -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <!-- EXTERN CSS -->
+  <link rel="stylesheet" href="css/site.css">
   <title>Zealand Connect</title>
 </head>
 
 <body>
   <!-- NAVBAR SETUP -->
   <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
-    <div class="container-fluid">
+    <div class="container-fluid;">
       <a class="navbar-brand" href="#">
         <img src="images/Logo.png" alt="ZealandConnect Logo" style="width:80px;" class="rounded-pill"></a>
     </div>
@@ -35,8 +35,8 @@
     </div>
   </nav>
 
-<br>
-<br>
+  <br>
+  <br>
 
   <!-- OVERSKRIFT LOGO -->
   <div class="text-center p-5">
@@ -46,6 +46,10 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-sm-3 text-center">
+        <h5 class="text1">Dato</h5>
+        <h6 class="text1" id="todaysDate">__/__/__</h6>
+      </div>
+      <div class="col-sm-3 text-center">
         <h5 class="text1">Mødt</h5>
         <h6 class="text1" id="hereTodayCounter">0</h6>
       </div>
@@ -54,10 +58,8 @@
         <h6 class="text1" id="notHereTodayCounter">0</h6>
       </div>
       <div class="col-sm-3 text-center">
-        <h5 class="text1">Hej 3</h5>
-      </div>
-      <div class="col-sm-3 text-center">
-        <h5 class="text1">Hej 4</h5>
+        <h5 class="text1">Antal elever</h5>
+        <h6 class="text1" id="totalStudents">_</h6>
       </div>
     </div>
   </div>
@@ -66,19 +68,18 @@
   <br>
   <!-- TABLE SETUP -->
   <div class="container mt-5">
-    <div class="btn-group">
-      <button class="btn btn-primary" onclick="filterTable('all')">All</button>
-      <button class="btn btn-primary" onclick="filterTable('hereToday')">Here Today</button>
-      <button class="btn btn-primary" onclick="filterTable('notHereToday')">Not Here Today</button>
-          <form action="/search" method="get">
-        <label for="search">Search:</label>
-        <input type="text" id="search" name="q" placeholder="Enter your search terms">
-        <button type="submit">Search</button>
-    </form>
+    <div class="btn-group d-flex">
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('all')">Alle</button>
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('hereToday')">Mødt</button>
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('notHereToday')">Ikke mødt</button>
+      <form class="d-flex" action="/search" method="get">
+        <input type="text" id="search" name="q" placeholder="Søgekriterie" class="form-control">
+        <button type="submit" class="btn btn-outline-dark btn-filter">Søg</button>
+      </form>
     </div>
-    <div style="overflow-x: auto; height: 500px; max-height: 500px; background-color: rgb(41, 41, 41);">
+    <div style="overflow-x: auto; height: 500px; max-height: 500px; background-color: rgb(41, 41, 41); position: relative;">
       <table class="table table-dark table-bordered table-hover">
-        <thead class="table-warning">
+        <thead class="table-warning" style="position:sticky; top: 0; z-index: 1;">
           <tr>
             <td><b>Student ID</b></td>
             <td><b>Navn</b></td>
@@ -188,106 +189,106 @@
         </tr>
       </table>
     </div>
-    
 
-  <script src="js/studenttable.js"></script>
 
-  <br>
+    <script src="js/studenttable.js"></script>
 
-  <div class="container mt-5">
-    <h5 class="text1">I Dag</h5>
-    <canvas id="myChart" style="width:100%;"></canvas>
+    <br>
 
-    <script>
-      const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+    <div class="container mt-5">
+      <h5 class="text1">I Dag</h5>
+      <canvas id="myChart" style="width:100%;"></canvas>
 
-      const chartOptions = {
-        scales: {
-          y: {
-            ticks: {
-              color: 'white',
+      <script>
+        const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+        const chartOptions = {
+          scales: {
+            y: {
+              ticks: {
+                color: 'white',
+              },
+              max: 25,
             },
-            max: 25,
+            x: {
+              ticks: {
+                color: 'white',
+              },
+            }
           },
-          x: {
-            ticks: {
-              color: 'white',
-            },
-          }
-        },
-        plugins: {
-          legend: {
-            display: true,
-            labels: {
-              color: 'white',
+          plugins: {
+            legend: {
+              display: true,
+              labels: {
+                color: 'white',
+              }
             }
           }
-        }
-      };
+        };
 
-      new Chart("myChart", {
-        type: "bar",
-        data: {
-          labels: xValues,
-          datasets: [
-            {
+        new Chart("myChart", {
+          type: "bar",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
+                backgroundColor: 'rgb(50, 150, 150)',
+                borderColor: 'rgb(75, 192, 192)',
+                borderWidth: 3,
+                label: "Showed up",
+                fill: false
+              },
+              {
+                data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
+                backgroundColor: 'rgb(255, 0, 0)',
+                borderColor: 'rgb(255, 100, 100)',
+                borderWidth: 3,
+                label: "Lazy",
+                fill: false
+              }
+            ],
+          },
+          options: chartOptions,
+        });
+      </script>
+    </div>
+
+    <br>
+
+    <div class="container mt-5">
+      <h5 class="text1">Denne Uge</h5>
+      <canvas id="myChart1" style="width:100%;"></canvas>
+
+      <script>
+        const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        new Chart("myChart1", {
+          type: "bar",
+          data: {
+            labels: xValues1,
+            datasets: [{
               data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
               backgroundColor: 'rgb(50, 150, 150)',
               borderColor: 'rgb(75, 192, 192)',
               borderWidth: 3,
               label: "Showed up",
               fill: false
-            },
-            {
+            }, {
               data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
               backgroundColor: 'rgb(255, 0, 0)',
               borderColor: 'rgb(255, 100, 100)',
               borderWidth: 3,
-              label: "Lazy",
+              label: "No Show",
               fill: false
-            }
-          ],
-        },
-        options: chartOptions,
-      });
-    </script>
-  </div>
-
-  <br>
-
-  <div class="container mt-5">
-    <h5 class="text1">Denne Uge</h5>
-    <canvas id="myChart1" style="width:100%;"></canvas>
-
-    <script>
-      const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
-      new Chart("myChart1", {
-        type: "bar",
-        data: {
-          labels: xValues1,
-          datasets: [{
-            data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
-            backgroundColor: 'rgb(50, 150, 150)',
-            borderColor: 'rgb(75, 192, 192)',
-            borderWidth: 3,
-            label: "Showed up",
-            fill: false
-          }, {
-            data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
-            backgroundColor: 'rgb(255, 0, 0)',
-            borderColor: 'rgb(255, 100, 100)',
-            borderWidth: 3,
-            label: "No Show",
-            fill: false
-          }]
-        },
-        options: chartOptions,
-      });
-    </script>
-  </div>
-<br>
-</br>
+            }]
+          },
+          options: chartOptions,
+        });
+      </script>
+    </div>
+    <br>
+    </br>
 </body>
 <footer>
 </footer>
