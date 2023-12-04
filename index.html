@@ -24,13 +24,13 @@
   <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
     <div class="container-fluid;">
       <a class="navbar-brand" href="#">
-        <img src="images/Logo.png" alt="ZealandConnect Logo" style="width:80px;" class="rounded-pill"></a>
+        <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
     </div>
     <div class="input-group mb-3 mt-3">
       <form action="/action_page.php">
-        <input type="text" placeholder="Username" name="username">
-        <input type="text" placeholder="Password" name="psw">
-        <button type="submit">Login</button>
+        <input type="text" placeholder="Username" name="username" id="usernameInput">
+        <input type="text" placeholder="Password" name="psw" id="passwordInput">
+        <button type="submit" id="loginButton">Login</button>
       </form>
     </div>
   </nav>
@@ -70,12 +70,12 @@
   <!-- TABLE SETUP -->
   <div class="container mt-5">
     <div class="btn-group d-flex">
-      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('all')">Alle</button>
-      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('hereToday')">Mødt</button>
-      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('notHereToday')">Ikke mødt</button>
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('all')" id="allStudentsButton">Alle</button>
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('hereToday')" id="metStudentsButton">Mødt</button>
+      <button class="btn btn-outline-dark btn-filter" onclick="filterTable('notHereToday')" id="missingStudentsButton">Ikke mødt</button>
       <form class="d-flex" action="/search" method="get">
-        <input type="text" id="search" name="q" placeholder="Søgekriterie" class="form-control">
-        <button type="submit" class="btn btn-outline-dark btn-filter">Søg</button>
+        <input type="text" id="search" name="q" placeholder="Søgekriterie" class="form-control" id="searchInput">
+        <button type="submit" class="btn btn-outline-dark btn-filter" id="searchButton">Søg</button>
       </form>
     </div>
     <div
@@ -191,9 +191,6 @@
         </tr>
       </table>
     </div>
-
-
-
     <br>
 
     <div class="container mt-5">
