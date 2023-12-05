@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- SCRIPTs -->
+  <!-- framework SCRIPTs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://unpkg.com/vue@next"></script>
@@ -17,24 +17,24 @@
   <!-- EXTERN CSS -->
   <link rel="stylesheet" href="css/site.css">
   <title>Zealand Connect</title>
+
+    <!-- NAVBAR SETUP -->
+    <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
+      <div class="container-fluid;">
+        <a class="navbar-brand" href="#">
+          <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
+      </div>
+      <div class="input-group mb-3 mt-3">
+        <form action="/action_page.php">
+          <input type="text" placeholder="Username" name="username" id="usernameInput">
+          <input type="text" placeholder="Password" name="psw" id="passwordInput">
+          <button type="submit" id="loginButton">Login</button>
+        </form>
+      </div>
+    </nav>
 </head>
 
 <body>
-  <!-- NAVBAR SETUP -->
-  <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
-    <div class="container-fluid;">
-      <a class="navbar-brand" href="#">
-        <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
-    </div>
-    <div class="input-group mb-3 mt-3">
-      <form action="/action_page.php">
-        <input type="text" placeholder="Username" name="username" id="usernameInput">
-        <input type="text" placeholder="Password" name="psw" id="passwordInput">
-        <button type="submit" id="loginButton">Login</button>
-      </form>
-    </div>
-  </nav>
-
   <br>
   <br>
 
@@ -42,7 +42,7 @@
   <div class="text-center p-5">
     <img src="images/Logo.png" alt="ZealandConnect Logo">
   </div>
-
+<div id="app">
   <!-- TEKST FØR TABEL (dato, mødt/ikke mødt, antal elever) -->
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -69,6 +69,7 @@
   <br>
   <!-- TABLE SETUP -->
   <div class="container mt-5">
+    <!-- TABLE FILTERS -->
     <div class="btn-group d-flex">
       <button class="btn btn-outline-dark btn-filter" onclick="filterTable('all')" id="allStudentsButton">Alle</button>
       <button class="btn btn-outline-dark btn-filter" onclick="filterTable('hereToday')" id="metStudentsButton">Mødt</button>
@@ -90,166 +91,26 @@
             <td><b>Se Data</b></td>
           </tr>
         </thead>
-        <tr>
-          <td>1</td>
-          <td>Canty</td>
-          <td>09:15</td>
-          <td>14:45</td>
-          <td>5:30</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Mads</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Babz</td>
-          <td>08:45</td>
-          <td>14:45</td>
-          <td>6:00</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>John</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Alice</td>
-          <td>10:30</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Bob</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>7</td>
-          <td>Eva</td>
-          <td>08:00</td>
-          <td>15:15</td>
-          <td>7:15</td>
-        </tr>
-        <!-- Additional mock data -->
-        <tr>
-          <td>8</td>
-          <td>Lisa</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>9</td>
-          <td>Sam</td>
-          <td>11:00</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>10</td>
-          <td>Grace</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>11</td>
-          <td>Tom</td>
-          <td>08:30</td>
-          <td>14:30</td>
-          <td>6:00</td>
-        </tr>
-        <tr>
-          <td>12</td>
-          <td>Nancy</td>
-          <td>10:15</td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>13</td>
-          <td>Chris</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr>
-          <td>14</td>
-          <td>Olivia</td>
-          <td>09:00</td>
-          <td>15:30</td>
-          <td>6:30</td>
-        </tr>
+        <tbody>
+          <tr v-for="student in students" :key="student.studentId">
+            <td>{{ student.studentNumber }}</td>
+            <td>{{ student.studentName }}</td>
+            <td>{{ student.timeArrived }}</td>
+            <td>{{ student.timeLeft }}</td>
+            <td><button @click="viewData(student)">Se Data</button></td>
+          </tr>
+        </tbody>
       </table>
     </div>
     <br>
-
+    <!-- TABLE SETUP END -->
+    
+    <!-- CHARTS -->
     <div class="container mt-5">
       <h5 class="text1">I Dag</h5>
       <canvas id="myChart" style="width:100%;"></canvas>
 
-      <script>
-        const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
 
-        const chartOptions = {
-          scales: {
-            y: {
-              ticks: {
-                color: 'white',
-              },
-              max: 25,
-            },
-            x: {
-              ticks: {
-                color: 'white',
-              },
-            }
-          },
-          plugins: {
-            legend: {
-              display: true,
-              labels: {
-                color: 'white',
-              }
-            }
-          }
-        };
-
-        new Chart("myChart", {
-          type: "bar",
-          data: {
-            labels: xValues,
-            datasets: [
-              {
-                data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
-                backgroundColor: 'rgb(50, 150, 150)',
-                borderColor: 'rgb(75, 192, 192)',
-                borderWidth: 3,
-                label: "Showed up",
-                fill: false
-              },
-              {
-                data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
-                backgroundColor: 'rgb(255, 0, 0)',
-                borderColor: 'rgb(255, 100, 100)',
-                borderWidth: 3,
-                label: "Lazy",
-                fill: false
-              }
-            ],
-          },
-          options: chartOptions,
-        });
-      </script>
     </div>
 
     <br>
@@ -258,37 +119,103 @@
       <h5 class="text1">Denne Uge</h5>
       <canvas id="myChart1" style="width:100%;"></canvas>
 
-      <script>
-        const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-        new Chart("myChart1", {
-          type: "bar",
-          data: {
-            labels: xValues1,
-            datasets: [{
-              data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
-              backgroundColor: 'rgb(50, 150, 150)',
-              borderColor: 'rgb(75, 192, 192)',
-              borderWidth: 3,
-              label: "Showed up",
-              fill: false
-            }, {
-              data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
-              backgroundColor: 'rgb(255, 0, 0)',
-              borderColor: 'rgb(255, 100, 100)',
-              borderWidth: 3,
-              label: "No Show",
-              fill: false
-            }]
-          },
-          options: chartOptions,
-        });
-      </script>
-      <script src="js/studenttable.js"></script>
     </div>
+    <!-- CHARTS END -->
   </div>
-  <!-- TABLE SETUP END -->
+  </div>
   <br><br>
+
+  <!-- custom scripts-->
+  <script src="js/index.js"></script>
+  <script src="js/studenttable.js"></script>
+
+  <script name="chart">
+    const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+    const chartOptions = {
+      scales: {
+        y: {
+          ticks: {
+            color: 'white',
+          },
+          max: 25,
+        },
+        x: {
+          ticks: {
+            color: 'white',
+          },
+        }
+      },
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            color: 'white',
+          }
+        }
+      }
+    };
+
+    new Chart("myChart", {
+      type: "bar",
+      data: {
+        labels: xValues,
+        datasets: [
+          {
+            data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
+            backgroundColor: 'rgb(50, 150, 150)',
+            borderColor: 'rgb(75, 192, 192)',
+            borderWidth: 3,
+            label: "Showed up",
+            fill: false
+          },
+          {
+            data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
+            backgroundColor: 'rgb(255, 0, 0)',
+            borderColor: 'rgb(255, 100, 100)',
+            borderWidth: 3,
+            label: "Lazy",
+            fill: false
+          }
+        ],
+      },
+      options: chartOptions,
+    });
+  </script>
+
+<script name="chart1">
+  const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+  new Chart("myChart1", {
+    type: "bar",
+    data: {
+      labels: xValues1,
+      datasets: [{
+        data: [0, 15, 17, 17, 17, 17, 14, 3, 0],
+        backgroundColor: 'rgb(50, 150, 150)',
+        borderColor: 'rgb(75, 192, 192)',
+        borderWidth: 3,
+        label: "Showed up",
+        fill: false
+      }, {
+        data: [20, 5, 3, 3, 3, 3, 6, 17, 20],
+        backgroundColor: 'rgb(255, 0, 0)',
+        borderColor: 'rgb(255, 100, 100)',
+        borderWidth: 3,
+        label: "No Show",
+        fill: false
+      }]
+    },
+    options: chartOptions,
+  });
+</script>
+
   <footer>
+    <div class="container-fluid d-flex justify-content-center">
+      <a class="" href="">
+        <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
+        <h5 class="copyright">&copy; 2023 </h5>
+    </div>
   </footer>
 </body>
