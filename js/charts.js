@@ -1,4 +1,5 @@
 const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
+const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 const chartOptions = {
   scales: {
@@ -50,7 +51,6 @@ new Chart("myChart", {
   options: chartOptions,
 });
 
-        const xValues1 = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
         new Chart("myChart1", {
           type: "bar",
