@@ -98,8 +98,10 @@
             <tr v-for="student in studentList" :key="student.studentId">
               <td>{{ student.studentNumber }}</td>
               <td>{{ student.studentName }}</td>
-              <td>{{ student.timeArrived }}</td>
-              <td>{{ student.timeLeft }}</td>
+              <td v-if="student.timeArrived == 0">fraværende check ind</td>
+              <td v-else="student.timeArrived">{{ student.timeArrived }}</td>
+              <td v-if="student.timeLeft == 0">check ud</td>
+              <td v-else="student.timeLeft">{{ student.timeLeft}}</td>
               <td><button @click="viewData(student)">Se Data</button></td>
             </tr>
           </tbody>

@@ -22,16 +22,22 @@ Vue.createApp({
 
             // Convert Unix timestamps to human-readable date and time in 24hr format
             this.studentList = this.studentList.map(student => {
+                const timeArrived = student.timeArrived !== 0 ? new Date(student.timeArrived * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
+                const timeLeft = student.timeLeft !== 0 ? new Date(student.timeLeft * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
+
                 return {
                     ...student,
-                    timeArrived: new Date(student.timeArrived * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }),
-                    timeLeft: new Date(student.timeLeft * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }),
+                    timeArrived,
+                    timeLeft,
                 };
-            });
+              }
+            );
 
-        } catch (error) {
+        } 
+        catch (error) 
+          {
             console.error('Error fetching students:', error);
-        }
+          }
     },
 
     methods: {
@@ -65,31 +71,51 @@ Vue.createApp({
         dailyChart() {
             const chartOptions = {
                 // Tilpas dine ønskede chart options her
+                scales: {
+                  y: {
+                    ticks: {
+                      color: 'white',
+                    },
+                    max: this.totalStudents,
+                  },
+                  x: {
+                    ticks: {
+                      color: 'white',
+                    },
+                  }
+                },
+                plugins: {
+                  legend: {
+                    display: true,
+                    labels: {
+                      color: 'white',
+                    }
+                  }
+                }
             };
 
             // Group students by their arrival time and count the number of students at each time
-            const studentsByTime = {};
-            const notMetStudentsByTime = {}; // For not met students
+            const presentStudentsByTime = {};
+            const absentStudentsByTime = {}; // For absent students
             this.studentList.forEach(student => {
                 const time = new Date(student.timeArrived * 1000).getHours(); // Get the hour of arrival
-                if (!studentsByTime[time]) {
-                    studentsByTime[time] = 0;
+                if (!presentStudentsByTime[time]) {
+                    presentStudentsByTime[time] = 0;
                 }
-                if (!notMetStudentsByTime[time]) {
-                    notMetStudentsByTime[time] = 0;
+                if (!absentStudentsByTime[time]) {
+                  absentStudentsByTime[time] = this.totalStudents;
                 }
 
-                if (student.metCondition) {
-                    studentsByTime[time]++;
-                } else {
-                    notMetStudentsByTime[time]++;
-                }
+                if (student.timeArrived > presentStudentsByTime[time]) {
+                    presentStudentsByTime[time]++;
+                  absentStudentsByTime[time]--;                }
+                
             });
 
             // Define x-axis labels as the time interval from 8 to 16
             const xValues = Array.from({ length: 9 }, (_, i) => i + 8); // Generates [8, 9, 10, 11, 12, 13, 14, 15, 16]
-            const dataValues = xValues.map(hour => studentsByTime[hour] || 0); // Get student count for each hour
-            const notMetDataValues = xValues.map(hour => notMetStudentsByTime[hour] || 0); // Get not met student count for each hour
+            const dataValues = xValues.map(hour => presentStudentsByTime[hour] || 0); // Get student count for each hour
+            const notMetDataValues = xValues.map(hour => absentStudentsByTime[hour] || 0); // Get not present student count for each hour
 
             // Render the chart using Chart.js
             new Chart("dailyChart", {
@@ -102,7 +128,7 @@ Vue.createApp({
                             backgroundColor: 'rgb(50, 150, 150)',
                             borderColor: 'rgb(75, 192, 192)',
                             borderWidth: 3,
-                            label: "Met Students",
+                            label: "Fremmødt",
                             fill: false
                         },
                         {
@@ -110,7 +136,7 @@ Vue.createApp({
                             backgroundColor: 'rgb(255, 0, 0)',
                             borderColor: 'rgb(255, 100, 100)',
                             borderWidth: 3,
-                            label: "Not Met Students",
+                            label: "Fraværende",
                             fill: false
                         }
                     ],
@@ -122,15 +148,37 @@ Vue.createApp({
         weeklyChart() {
             const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
             const chartOptions = {
-                // Tilpas dine ønskede chart options her
-            };
+                  // Tilpas dine ønskede chart options her
+                  scales: {
+                    y: {
+                      ticks: {
+                        color: 'white',
+                      },
+                      max: this.totalStudents,
+                    },
+                    x: {
+                      ticks: {
+                        color: 'white',
+                      },
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: true,
+                      labels: {
+                        color: 'white',
+                      }
+                    }
+                  }
+              };
+            
 
             const studentsByDay = {
-                Monday: { met: 0, notMet: 0 },
-                Tuesday: { met: 0, notMet: 0 },
-                Wednesday: { met: 0, notMet: 0 },
-                Thursday: { met: 0, notMet: 0 },
-                Friday: { met: 0, notMet: 0 }
+                Monday: { present: 0, absent: this.totalStudents },
+                Tuesday: { present: 0, absent: this.totalStudents },
+                Wednesday: { present: 0, absent: this.totalStudents },
+                Thursday: { present: 0, absent: this.totalStudents },
+                Friday: { present: 0, absent: this.totalStudents },
             };
 
             this.studentList.forEach(student => {
@@ -139,15 +187,14 @@ Vue.createApp({
 
                 if (day in studentsByDay) {
                     if (student.metCondition) {
-                        studentsByDay[day].met++;
-                    } else {
-                        studentsByDay[day].notMet++;
+                        studentsByDay[day].present++;
+                        studentsByDay[day].absent--;
                     }
                 }
             });
 
-            const metData = daysOfWeek.map(day => studentsByDay[day].met);
-            const notMetData = daysOfWeek.map(day => studentsByDay[day].notMet);
+            const metData = daysOfWeek.map(day => studentsByDay[day].present);
+            const notMetData = daysOfWeek.map(day => studentsByDay[day].absent);
 
             new Chart("weeklyChart", {
                 type: "bar",
@@ -159,7 +206,7 @@ Vue.createApp({
                             backgroundColor: 'rgb(50, 150, 150)',
                             borderColor: 'rgb(75, 192, 192)',
                             borderWidth: 3,
-                            label: "Met Students",
+                            label: "Fremmødt",
                             fill: false
                         },
                         {
@@ -167,7 +214,7 @@ Vue.createApp({
                             backgroundColor: 'rgb(255, 0, 0)',
                             borderColor: 'rgb(255, 100, 100)',
                             borderWidth: 3,
-                            label: "Not Met Students",
+                            label: "Fraværende",
                             fill: false
                         }
                     ],
