@@ -32,8 +32,6 @@ function filterTable(filterType) {
         break;
     }
   });
-
-  updateCounters(); // Move the updateCounters call outside the forEach loop
 }
 
 function updateCounters() {

@@ -18,23 +18,23 @@
   <link rel="stylesheet" href="css/site.css">
   <title>Zealand Connect</title>
 
-    <!-- NAVBAR SETUP -->
-    <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
-      <div class="container-fluid;">
-        <a class="navbar-brand" href="#">
-          <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
-      </div>
-      <div class="input-group mb-3 mt-3">
-        <form action="/action_page.php">
-          <input type="text" placeholder="Username" name="username" id="usernameInput">
-          <input type="text" placeholder="Password" name="psw" id="passwordInput">
-          <button type="submit" id="loginButton">Login</button>
-        </form>
-      </div>
-    </nav>
 </head>
 
 <body>
+  <!-- NAVBAR SETUP -->
+  <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
+    <div class="container-fluid;">
+      <a class="navbar-brand" href="#">
+        <img src="images/Logo.png" alt="ZealandConnect Logo" id="navHomeLogo" style="width:80px;" class="rounded-pill"></a>
+    </div>
+    <div class="input-group mb-3 mt-3">
+      <form action="/action_page.php">
+        <input type="text" placeholder="Username" name="username" id="usernameInput">
+        <input type="text" placeholder="Password" name="psw" id="passwordInput">
+        <button type="submit" id="loginButton">Login</button>
+      </form>
+    </div>
+  </nav>
   <br>
   <br>
 
@@ -92,7 +92,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="student in students" :key="student.studentId">
+          <tr v-for="student in studentList" :key="student.studentId">
             <td>{{ student.studentNumber }}</td>
             <td>{{ student.studentName }}</td>
             <td>{{ student.timeArrived }}</td>
@@ -127,8 +127,8 @@
   <br><br>
 
   <!-- custom scripts-->
-  <script src="js/index.js"></script>
   <script src="js/studenttable.js"></script>
+  <script src="js/index.js"></script>
 
   <script name="chart">
     const xValues = [8, 9, 10, 11, 12, 13, 14, 15, 16];
