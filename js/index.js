@@ -12,7 +12,8 @@ Vue.createApp({
     try {
       const response = await axios.get(apiUrl);
       this.studentList = response.data;
-      this.renderChart();
+      this.dailyChart();
+      this.weeklyChart();
 
       // Convert Unix timestamps to human-readable date and time in 24hr format
       this.studentList = this.studentList.map(student => {
@@ -23,14 +24,13 @@ Vue.createApp({
         };
       });
 
-      this.renderChart(); // Render the chart after fetching data
     } catch (error) {
       console.error('Error fetching students:', error);
     }
   },
 
   methods: {
-    renderChart() {
+    dailyChart() {
       const chartOptions = {
         scales: {
           y: {
@@ -79,7 +79,7 @@ Vue.createApp({
       const dataValues = xValues.map(hour => studentsByTime[hour] || 0); // Get student count for each hour
 
       // Render the chart using Chart.js
-      new Chart("myChart", {
+      new Chart("dailyChart", {
         type: "bar",
         data: {
           labels: xValues,
@@ -97,5 +97,61 @@ Vue.createApp({
         options: chartOptions,
       });
     },
-  },
+    weeklyChart() {
+        const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        const chartOptions = {
+          // Tilpas dine ønskede chart options her
+        };
+    
+        const studentsByDay = {
+          Monday: { met: 0, notMet: 0 },
+          Tuesday: { met: 0, notMet: 0 },
+          Wednesday: { met: 0, notMet: 0 },
+          Thursday: { met: 0, notMet: 0 },
+          Friday: { met: 0, notMet: 0 }
+        };
+    
+        this.studentList.forEach(student => {
+          const dayIndex = new Date(student.timeArrived * 1000).getDay();
+          const day = daysOfWeek[dayIndex - 1];
+    
+          if (day in studentsByDay) {
+            if (student.metCondition) {
+              studentsByDay[day].met++;
+            } else {
+              studentsByDay[day].notMet++;
+            }
+          }
+        });
+    
+        const metData = daysOfWeek.map(day => studentsByDay[day].met);
+        const notMetData = daysOfWeek.map(day => studentsByDay[day].notMet);
+    
+        new Chart("weeklyChart", {
+          type: "bar",
+          data: {
+            labels: daysOfWeek,
+            datasets: [
+              {
+                data: metData,
+                backgroundColor: 'rgb(50, 150, 150)',
+                borderColor: 'rgb(75, 192, 192)',
+                borderWidth: 3,
+                label: "Met Students",
+                fill: false
+              },
+              {
+                data: notMetData,
+                backgroundColor: 'rgb(255, 0, 0)',
+                borderColor: 'rgb(255, 100, 100)',
+                borderWidth: 3,
+                label: "Not Met Students",
+                fill: false
+              }
+            ],
+          },
+          options: chartOptions,
+        });
+      },
+    }
 }).mount("#app");
