@@ -70,12 +70,9 @@
     <div class="container mt-5">
       <!-- TABLE FILTERS -->
       <div class="btn-group d-flex">
-        <button class="btn btn-outline-dark btn-filter" onclick="filterTable('all')"
-          id="allStudentsButton">Alle</button>
-        <button class="btn btn-outline-dark btn-filter" onclick="filterTable('hereToday')"
-          id="metStudentsButton">Mødt</button>
-        <button class="btn btn-outline-dark btn-filter" onclick="filterTable('notHereToday')"
-          id="missingStudentsButton">Ikke mødt</button>
+        <button class="btn btn-outline-dark btn-filter" @click="filterTable('all')" id="allStudentsButton">Alle</button>
+        <button class="btn btn-outline-dark btn-filter" @click="filterTable('presentStudents')" id="metStudentsButton">Mødt</button>
+        <button class="btn btn-outline-dark btn-filter" @click="filterTable('absentStudents')" id="missingStudentsButton">Ikke mødt</button>
         <form class="d-flex" action="/search" method="get">
           <input type="text" id="search" name="q" placeholder="Søgekriterie" class="form-control" id="searchInput">
           <button type="submit" class="btn btn-outline-dark btn-filter" id="searchButton">Søg</button>
@@ -95,13 +92,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="student in studentList" :key="student.studentId">
+            <tr v-for="student in filterList" :key="student.studentId">
               <td>{{ student.studentNumber }}</td>
               <td>{{ student.studentName }}</td>
               <td v-if="student.timeArrived == 0">fraværende check ind</td>
-              <td v-else="student.timeArrived">{{ student.timeArrived }}</td>
+              <td v-else>{{ student.timeArrived }}</td>
               <td v-if="student.timeLeft == 0">check ud</td>
-              <td v-else="student.timeLeft">{{ student.timeLeft}}</td>
+              <td v-else>{{ student.timeLeft}}</td>
               <td><button @click="viewData(student)">Se Data</button></td>
             </tr>
           </tbody>
@@ -126,6 +123,9 @@
 
   </div>
   <!-- END: APP -->
+  
+  <!-- CUSTOM SCRIPTS-->
+  <script src="js/index.js"></script>
 
   <footer>
     <div class="container-fluid d-flex justify-content-center mt-3">
@@ -136,6 +136,3 @@
     </div>
   </footer>
 </body>
-<script src="js/index.js"></script>
-<!-- <script src="js/studenttable.js"></script> -->
-<!-- <script src="js/charts.js"></script> -->

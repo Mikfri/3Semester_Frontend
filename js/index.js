@@ -4,6 +4,7 @@ Vue.createApp({
     data() {
         return {
             studentList: [],
+            filterList: [],
             singleStudent: null,
             totalStudents: 0,
             hereTodayCounter: 0,
@@ -19,18 +20,18 @@ Vue.createApp({
             this.updateCounters(),
             this.dailyChart(),
             this.weeklyChart(),
-
+            
             // Convert Unix timestamps to human-readable date and time in 24hr format
-            this.studentList = this.studentList.map(student => {
-                const timeArrived = student.timeArrived !== 0 ? new Date(student.timeArrived * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
-                const timeLeft = student.timeLeft !== 0 ? new Date(student.timeLeft * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
-
-                return {
-                    ...student,
-                    timeArrived,
-                    timeLeft,
-                };
-              }
+            this.filterList = this.studentList = this.studentList.map(student => {
+              const timeArrived = student.timeArrived !== 0 ? new Date(student.timeArrived * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
+              const timeLeft = student.timeLeft !== 0 ? new Date(student.timeLeft * 1000).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, minute12: false }) : "0";
+              
+              return {
+                ...student,
+                timeArrived,
+                timeLeft,
+              };
+            }
             );
 
         } 
@@ -47,7 +48,7 @@ Vue.createApp({
             this.studentList.forEach(student => {
                 const checkInTime = student.timeArrived;
 
-                if (!counterType || (counterType === 'hereToday' && checkInTime) || (counterType === 'notHereToday' && !checkInTime)) {
+                if (!counterType || (counterType === 'presentStudents' && checkInTime) || (counterType === 'absentStudents' && !checkInTime)) {
                     count++;
                 }
             });
@@ -57,8 +58,8 @@ Vue.createApp({
 
         updateCounters() {
             this.totalStudents = this.countStudents(); // Remove 'totalStudents' argument
-            this.hereTodayCounter = this.countStudents('hereToday');
-            this.notHereTodayCounter = this.countStudents('notHereToday');
+            this.hereTodayCounter = this.countStudents('presentStudents');
+            this.notHereTodayCounter = this.countStudents('absentStudents');
         },
 
         updateHTML() {
@@ -66,6 +67,25 @@ Vue.createApp({
             document.getElementById('hereTodayCounter').textContent = this.hereTodayCounter.toString();
             document.getElementById('notHereTodayCounter').textContent = this.notHereTodayCounter.toString();
             document.getElementById('totalStudents').textContent = this.totalStudents.toString();
+        },
+
+        filterTable(filterType) {
+
+          switch (filterType) {
+          case 'all':
+            this.filterList = this.studentList; // sets the filterList to the original studentList
+            break;
+          case 'presentStudents':
+            this.filterList = this.studentList.filter(student => student.timeArrived != 0); // filters the present student from the timeArrived property being anything other than 0.
+            break;
+          case 'absentStudents':
+            this.filterList = this.studentList.filter(student => student.timeArrived == 0); // filters the absent student from the timeArrived property being 0
+            break;
+          default:
+            this.studentList; // defaults to the original studentList
+            break;
+          }
+          console.log(this.filterList._raw);
         },
 
         dailyChart() {
@@ -95,7 +115,7 @@ Vue.createApp({
             };
 
             // Group students by their arrival time and count the number of students at each time
-            const presentStudentsByTime = {};
+            const presentStudentsByTime = {}; // present students
             const absentStudentsByTime = {}; // For absent students
             this.studentList.forEach(student => {
                 const time = new Date(student.timeArrived * 1000).getHours(); // Get the hour of arrival
