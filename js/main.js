@@ -16,6 +16,47 @@ const app = Vue.createApp({
                 }
             });
         },
+        async fetchData(weekNo) {
+            try {
+                const response = await axios.get(apiUrl);
+                const studentData = response.data;
+
+                // Mappe Unix Time-stempler til datoer
+                const formattedData = studentData.map(student => {
+                    return {
+                        ...student,
+                        timeArrived: new Date(student.timeArrived * 1000),
+                        timeLeft: new Date(student.timeLeft * 1000),
+                        timeCreated: new Date(student.timeCreated * 1000)
+                    };
+                });
+
+                // Grupper data efter hver arbejdsdag (mandag til fredag)
+                const groupedData = {
+                    Monday: [],
+                    Tuesday: [],
+                    Wednesday: [],
+                    Thursday: [],
+                    Friday: [],
+                    Saturday: [],
+                    Sunday: [],
+                };
+
+                formattedData.forEach(student => {
+                    const dayOfWeek = student.timeArrived.getDay();
+                    const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
+
+                    // Tildel hver student til deres respektive arbejdsdag
+                    if (dayName in groupedData) {
+                        groupedData[dayName].push(student);
+                    }
+                });
+
+                this.studentData = groupedData; // Opdater Vue data med grupperet data efter arbejdsdag
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        },
         formatDate(date) {
             return new Date(date).toLocaleDateString('en-GB', {
                 weekday: 'short',
@@ -29,7 +70,7 @@ const app = Vue.createApp({
         filterByWeekNo(weekNo) {
             const selectedDate = new Date(weekNo + '-1'); // Get date for the selected week's Monday
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        
+
             const filteredData = {};
             for (const day of days) {
                 filteredData[day] = this.studentData[day].filter(student => {
@@ -37,22 +78,17 @@ const app = Vue.createApp({
                     const startOfWeek = new Date(selectedDate);
                     const endOfWeek = new Date(selectedDate);
                     endOfWeek.setDate(selectedDate.getDate() + 6);
-        
+
                     return studentDate >= startOfWeek && studentDate <= endOfWeek;
                 });
             }
-        
+
             return filteredData;
-        }       
+        }
     },
     watch: {
         selectedWeekNo(newValue) {
-            fetchData(newValue).then(data => {
-                if (data) {
-                    this.studentData = data;
-                    //this.selectedWeekday = 'Monday'; // Sæt standard valgt dag til mandag
-                }
-            });
+            this.fetchData(newValue); // Kalder fetchData med det nye ugenummer
         }
     },
     mounted() {
@@ -60,49 +96,5 @@ const app = Vue.createApp({
     }
 });
 
-
 app.mount('#app');
-
-// Hent data fra API'en
-async function fetchData(weekNo) {
-    try {
-        const response = await axios.get(apiUrl);
-        const studentData = response.data;
-
-        // Mappe Unix Time-stempler til datoer
-        const formattedData = studentData.map(student => {
-            return {
-                ...student,
-                timeArrived: new Date(student.timeArrived * 1000),
-                timeLeft: new Date(student.timeLeft * 1000),
-            };
-        });
-
-        // Grupper data efter hver arbejdsdag (mandag til fredag)
-        const groupedData = {
-            Monday: [],
-            Tuesday: [],
-            Wednesday: [],
-            Thursday: [],
-            Friday: [],
-            Saturday: [],
-            Sunday: [],
-          };
-
-        formattedData.forEach(student => {
-            const dayOfWeek = student.timeArrived.getDay();
-            const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
-
-            // Tildel hver student til deres respektive arbejdsdag
-            if (dayName in groupedData) {
-                groupedData[dayName].push(student);
-            }
-        });
-
-        return groupedData; // Returner grupperet data efter arbejdsdag
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return null;
-    }
-}
 
