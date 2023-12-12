@@ -112,21 +112,21 @@
           </button>
           <form class="d-flex" action="/search" method="get">
             <input
-              type="text"
-              id="search"
-              name="q"
-              placeholder="Søgekriterie"
-              class="form-control"
-              id="searchInput"
-            />
+            type="text"
+            name="q"
+            placeholder="Søgekriterie"
+            class="form-control"
+            id="searchInput"
+          />          
             <button
-              type="submit"
+              type="button"
               class="btn btn-outline-dark btn-filter"
               id="searchButton"
+              @click="searchByName"
             >
               Søg
             </button>
-          </form>
+          </form>          
         </div>
 
         <div
@@ -144,8 +144,12 @@
               style="position: sticky; top: 0; z-index: 1"
             >
               <tr>
-                <td><b>Student ID</b></td>
-                <td><b>Navn</b></td>
+                <td @click="sortTable('studentNumber')">
+                  <b>Student ID</b> {{ sortColumn === 'studentNumber' ? (sortOrder === 1 ? '↑' : '↓') : '' }}
+                </td>
+                <td @click="sortTable('studentName')">
+                  <b>Navn</b> {{ sortColumn === 'studentName' ? (sortOrder === 1 ? '↑' : '↓') : '' }}
+                </td>
                 <td><b>Check Ind</b></td>
                 <td><b>Check Ud</b></td>
                 <td><b>Se Data</b></td>

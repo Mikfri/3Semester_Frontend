@@ -14,6 +14,8 @@ Vue.createApp({
       totalStudents: 0,
       hereTodayCounter: 0,
       notHereTodayCounter: 0,
+      sortColumn: null,
+      sortOrder: 1, // 1 for stigende, -1 for faldende
     };
   },
 
@@ -129,6 +131,28 @@ Vue.createApp({
       console.log(this.filterList._raw);
     },
     
+    sortTable(column) {
+      if (column === this.sortColumn) {
+        this.sortOrder *= -1;
+      } else {
+        this.sortOrder = 1;
+        this.sortColumn = column;
+      }
+  
+      this.filterList = this.filterList.sort((a, b) => {
+        const valueA = column === 'studentNumber' ? a[column] : a[column];
+        const valueB = column === 'studentNumber' ? b[column] : b[column];
+  
+        return valueA.localeCompare(valueB) * this.sortOrder;
+      });
+    },
+    searchByName() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      this.filterList = this.activityList.filter((student) => {
+        return student.studentName.toLowerCase().includes(searchInput);
+      });
+    },    
+
     //genereates the daily chart
     dailyChart() {
       //personal chart options
