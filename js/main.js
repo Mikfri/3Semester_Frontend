@@ -4,18 +4,11 @@ const app = Vue.createApp({
     data() {
         return {
             studentData: {}, // Gemmer de hentede data
-            selectedWeekNo: '2023-W49',
-            selectedWeekday: 'Monday' // Standard valgt arbejdsdag
+            selectedWeekNo: '',
+            selectedWeekday: '' // Standard valgt arbejdsdag
         };
     },
     methods: {
-        fetchData() {
-            fetchData().then(data => {
-                if (data) {
-                    this.studentData = data;
-                }
-            });
-        },
         async fetchData(weekNo) {
             try {
                 const response = await axios.get(apiUrl);
@@ -38,12 +31,10 @@ const app = Vue.createApp({
                     Wednesday: [],
                     Thursday: [],
                     Friday: [],
-                    Saturday: [],
-                    Sunday: [],
                 };
 
                 formattedData.forEach(student => {
-                    const dayOfWeek = student.timeArrived.getDay();
+                    const dayOfWeek = student.timeCreated.getDay();
                     const dayName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][dayOfWeek];
 
                     // Tildel hver student til deres respektive arbejdsdag
@@ -65,8 +56,15 @@ const app = Vue.createApp({
                 year: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit'
-            }).replace(',', ', ');
+            })
         },
+        // displayTimeArrived(timeArrived) {
+        //     return timeArrived === 0 ? 'Student has not arrived' : formatDate(timeArrived);
+        // },
+
+        // displayTimeLeft(timeLeft) {
+        //     return timeLeft === 0 ? 'Student has not checked out' : formatDate(timeLeft);
+        // },
         filterByWeekNo(weekNo) {
             const selectedDate = new Date(weekNo + '-1'); // Get date for the selected week's Monday
             const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

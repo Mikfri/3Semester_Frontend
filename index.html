@@ -56,6 +56,7 @@
         <tr>
           <th>Student Name</th>
           <th>Student Email</th>
+          <th>Time Created</th>
           <th>Time Arrived</th>
           <th>Time Left</th>
         </tr>
@@ -64,6 +65,7 @@
         <tr v-for="student in studentData[selectedWeekday]" :key="student.studentNumber">
           <td>{{ student.studentName }}</td>
           <td>{{ student.studentEmail }}</td>
+          <td>{{ formatDate(student.timeCreated) }}</td>
           <td>{{ formatDate(student.timeArrived) }}</td>
           <td>{{ formatDate(student.timeLeft) }}</td>
         </tr>
