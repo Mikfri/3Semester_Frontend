@@ -3,12 +3,10 @@ const apiUrl = "https://zealandconnect.azurewebsites.net/api/Activitydata";
 Vue.createApp({
   data() {
     return {
-      selectedDate: new Date().toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      }),
-      activityList: [],
+      selectedDate: 0,
+      submitDateForm: "dd-MM-yyyy",
+      responseActivityLog: [],
+      dateActivityLog: [],
       filterList: [],
       singleStudent: null,
       totalStudents: 0,
@@ -32,12 +30,20 @@ Vue.createApp({
       // Use Axios to fetch data from the API
       try {
         const response = await axios.get(apiUrl);
-        this.activityList = response.data;
-        this.filterList = this.activityList; // Assuming you want to show all students initially
-        this.updateCounters();
+        this.responseActivityLog = response;
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+    },
+
+    filterBydate() {
+      
+      foreach(){
+        
+      }
+      this.dateActivityLog = this.responseActivityLog
+
+
     },
 
     updateCounters() {
