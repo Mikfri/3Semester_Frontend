@@ -6,18 +6,18 @@ const app = Vue.createApp({
             studentData: {},
             selectedWeekNo: '',
             selectedWeekday: '',
-            weekdays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+            //weekdays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
         };
     },
     methods: {
-        async fetchData() {
+        async fetchDataByWeekDay() {
             try {
                 const response = await axios.get(apiUrl);
                 const studentData = response.data;
 
                 const formattedData = this.convertUnixTimeToDates(studentData);
 
-                this.groupDataByWeekdays(formattedData);
+                this.groupDataByWeekDay(formattedData);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -32,7 +32,7 @@ const app = Vue.createApp({
                 };
             });
         },
-        groupDataByWeekdays(formattedData) {
+        groupDataByWeekDay(formattedData) {
             const groupedData = {
                 Monday: [],
                 Tuesday: [],
@@ -63,7 +63,7 @@ const app = Vue.createApp({
         },
     },
     mounted() {
-        this.fetchData();
+        this.fetchDataByWeekDay();
     }
 });
 
