@@ -47,10 +47,10 @@
     <div class="row justify-content-center">
 
       <div class="col-sm-3 text-center">
-        <form @submit.prevent="submitDateForLogs">
-          <label for="date">Dato:</label>
-          <input type="date" v-model="selectedDate" id="date" name="date">
-          <input type="submit" value="Submit">
+        <form class="date-filter">
+          <label for="selectedDate">Dato:</label>
+          <input id="selectedDate" v-model="selectedDate" type="date">
+          <button class="button" type="button" @click="submitDateForLogs" id="date-button">submit</button>
         </form>
       </div>
 

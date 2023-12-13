@@ -55,16 +55,14 @@ Vue.createApp({
       return date.toLocaleTimeString('da-DK', { hour: 'numeric', minute: 'numeric'});
     },
 
-
     submitDateForLogs() {
-      if (this.selectedDate != null) {
-        this.dateActivityLog = this.responseActivityLog.filter(log => {
-          return this.selectedDate.toDateString() === log.timeCreated.toDateString();
-        });
-      } else {
-        this.dateActivityLog = []; // Clear the filtered list if no date is selected
-      }
-      console.log(this.selectedDate);
+      const dateObjectDate = new Date(this.selectedDate);
+      const danishDate = dateObjectDate.toLocaleDateString('da-DK');
+      this.dateActivityLog = this.responseActivityLog.filter(log => {
+        if(log.timeCreated == danishDate){
+          return log;
+        }
+      });
       console.log(this.dateActivityLog);
     },
 
