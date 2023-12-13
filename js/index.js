@@ -15,7 +15,7 @@ Vue.createApp({
       hereTodayCounter: 0,
       notHereTodayCounter: 0,
       sortColumn: null,
-      sortOrder: 1, // 1 for stigende, -1 for faldende
+      sortOrder: 1,
     };
   },
 
