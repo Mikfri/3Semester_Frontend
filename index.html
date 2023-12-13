@@ -114,7 +114,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="student in responseActivityLog" :key="student.studentId">
+            <tr v-for="student in dateActivityLog.length > 0 ? dateActivityLog : responseActivityLog" :key="student.studentId">
               <td>{{ student.studentNumber }}</td>
               <td>{{ student.studentName }}</td>
               <td v-if="student.timeArrived == 0">fraværende check ind</td>
@@ -122,7 +122,7 @@
               <td v-if="student.timeLeft == 0">check ud</td>
               <td class="text-center" v-else>{{ student.timeLeft}}</td>
               <td><button @click="viewData(student)">Se Data</button></td>
-            </tr>
+            </tr>            
           </tbody>
         </table>
       </div>
