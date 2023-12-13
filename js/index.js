@@ -3,7 +3,7 @@ const apiUrl = "https://zealandconnect.azurewebsites.net/api/Activitydata";
 Vue.createApp({
   data() {
     return {
-      selectedDate: 0,
+      selectedDate: null,
       submitDateForm: "dd-MM-yyyy",
       responseActivityLog: [],
       dateActivityLog: [],
@@ -27,23 +27,45 @@ Vue.createApp({
 
   methods: {
     async getData() {
-      // Use Axios to fetch data from the API
       try {
         const response = await axios.get(apiUrl);
-        this.responseActivityLog = response;
+        this.responseActivityLog = response.data; // Assuming your data is in response.data
+        this.convertUnixTimestampsOnLogs(); // Call the conversion function
+        console.log(this.responseActivityLog)
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     },
+    convertUnixTimestampsOnLogs() {
+      this.responseActivityLog.forEach(log => {
+        log.timeCreated = this.formatUnixTimestamp(log.timeCreated);
+        log.timeArrived = this.formatTime(log.timeArrived);
+        log.timeLeft = this.formatTime(log.timeLeft);
+        log.totalTime = this.formatTime(log.totalTime)
+      });
+    },
 
-    filterBydate() {
-      
-      foreach(){
-        
+    formatUnixTimestamp(timestamp) {
+      const date = new Date(timestamp * 1000); // Convert to milliseconds
+      return date.toLocaleDateString('da-DK', { day: 'numeric', month: 'numeric', year: 'numeric' });
+    },
+
+    formatTime(timestamp) {
+      const date = new Date(timestamp * 1000); // Convert to milliseconds
+      return date.toLocaleTimeString('da-DK', { hour: 'numeric', minute: 'numeric'});
+    },
+
+
+    submitDateForLogs() {
+      if (this.selectedDate != null) {
+        this.dateActivityLog = this.responseActivityLog.filter(log => {
+          return this.selectedDate.toDateString() === log.timeCreated.toDateString();
+        });
+      } else {
+        this.dateActivityLog = []; // Clear the filtered list if no date is selected
       }
-      this.dateActivityLog = this.responseActivityLog
-
-
+      console.log(this.selectedDate);
+      console.log(this.dateActivityLog);
     },
 
     updateCounters() {
