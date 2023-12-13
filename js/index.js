@@ -30,10 +30,10 @@ Vue.createApp({
 
   methods: {
     //method to fetch students activity data from the api service.
-    async getData(url) {
+    async getData() {
       const response = await axios.get(apiUrl);
       this.activityList = response.data;
-        this.updateCounters(), //updates the count of students who is currently pressent or absent and total
+      this.updateCounters(), //updates the count of students who is currently pressent or absent and total
         this.dailyChart(), //loads the daily chart
         this.weeklyChart(); //loads the weekly chart
 
@@ -42,16 +42,16 @@ Vue.createApp({
         const timeArrived =
           student.timeArrived !== 0
             ? new Date(student.timeArrived * 1000).toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "0";
         const timeLeft =
           student.timeLeft !== 0
             ? new Date(student.timeLeft * 1000).toLocaleTimeString("en-GB", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "0";
 
         return {
@@ -112,25 +112,25 @@ Vue.createApp({
     filterTable(filterType) {
       switch (filterType) {
         case "all": // sets the filterList to the original activityList to display all students
-          this.filterList = this.activityList; 
+          this.filterList = this.activityList;
           break;
         case "presentStudents": // filters the present student from the timeArrived property being anything other than 0.
           this.filterList = this.activityList.filter(
             (student) => student.timeArrived != 0
-          ); 
+          );
           break;
         case "absentStudents": // filters the absent student from the timeArrived property being 0
           this.filterList = this.activityList.filter(
             (student) => student.timeArrived == 0
-          ); 
+          );
           break;
         default: // defaults to the original activityList
-          this.activityList; 
+          this.activityList;
           break;
       }
       console.log(this.filterList._raw);
     },
-    
+
     sortTable(column) {
       if (column === this.sortColumn) {
         this.sortOrder *= -1;
@@ -138,11 +138,11 @@ Vue.createApp({
         this.sortOrder = 1;
         this.sortColumn = column;
       }
-  
+
       this.filterList = this.filterList.sort((a, b) => {
         const valueA = column === 'studentNumber' ? a[column] : a[column];
         const valueB = column === 'studentNumber' ? b[column] : b[column];
-  
+
         return valueA.localeCompare(valueB) * this.sortOrder;
       });
     },
@@ -151,7 +151,7 @@ Vue.createApp({
       this.filterList = this.activityList.filter((student) => {
         return student.studentName.toLowerCase().includes(searchInput);
       });
-    },    
+    },
 
     //genereates the daily chart
     dailyChart() {
