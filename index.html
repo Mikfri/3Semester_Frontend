@@ -1,16 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- https://www.bootstrapcdn.com/ -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- FRAMEWORK SCRIPTs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/vue@next"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/Chart.min.js"></script>
-    <!-- <script src="FrontEnd\node_modules\chart.js"></script> -->
+    <!-- BOOTSTRAP5 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- BOOTSTRAP CSS  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <!-- EXTERN CSS -->
+    <link rel="stylesheet" href="css/site.css" />
+    <title>Zealand Connect</title>
+    <link rel="icon" href="images/Logo.png" type="image/x-icon" />
+  </head>
 
+  <body>
+    <!-- NAVBAR SETUP -->
+    <nav class="navbar navbar-expand-sm fixed-top custom-navbar">
+      <div class="container-fluid;">
+        <a class="navbar-brand" href="#">
+          <img
+            src="images/Logo.png"
+            alt="ZealandConnect Logo"
+            id="navHomeLogo"
+            style="width: 80px"
+            class="rounded-pill"
+        /></a>
+      </div>
+      <div class="input-group mb-3 mt-3">
+        <form action="/action_page.php">
+          <input
+            type="text"
+            placeholder="Username"
+            name="username"
+            id="usernameInput"
+          />
+          <input
+            type="text"
+            placeholder="Password"
+            name="psw"
+            id="passwordInput"
+          />
+          <button type="submit" id="loginButton">Login</button>
+        </form>
+      </div>
+    </nav>
+    <br />
+    <br />
 
-</head>
+    <!-- OVERSKRIFT LOGO -->
+    <div class="text-center p-5">
+      <img src="images/Logo.png" alt="ZealandConnect Logo" />
+    </div>
+    <div id="app">
+      <!-- Dato, Mødt, Ikke Mødt og Antal elever -->
+      <div class="row justify-content-center">
+        <div class="col-sm-3 text-center">
+          <h5 class="text1">Dato</h5>
+          <h6 class="text1" id="Date">
+            {{ selectedDate }}
+          </h6>
+        </div>
+        <div class="col-sm-3 text-center">
+          <h5 class="text1">Mødt</h5>
+          <h6 class="text1" id="hereTodayCounter">{{ hereTodayCounter }}</h6>
+        </div>
+        <div class="col-sm-3 text-center">
+          <h5 class="text1">Ikke Mødt</h5>
+          <h6 class="text1" id="notHereTodayCounter">
+            {{ notHereTodayCounter }}
+          </h6>
+        </div>
+        <div class="col-sm-3 text-center">
+          <h5 class="text1">Antal elever</h5>
+          <h6 class="text1" id="totalStudents">{{ totalStudents }}</h6>
+        </div>
+      </div>
+
+      <br />
+      <!-- TABLE SETUP -->
+      <div class="container mt-5">
+        <!-- TABLE FILTERS -->
+        <div class="btn-group d-flex">
+          <button
+            class="btn btn-outline-dark btn-filter"
+            @click="filterTable('all')"
+            id="allStudentsButton"
+          >
+            Alle
+          </button>
+          <button
+            class="btn btn-outline-dark btn-filter"
+            @click="filterTable('presentStudents')"
+            id="metStudentsButton"
+          >
+            Mødt
+          </button>
+          <button
+            class="btn btn-outline-dark btn-filter"
+            @click="filterTable('absentStudents')"
+            id="missingStudentsButton"
+          >
+            Ikke mødt
+          </button>
+          <form class="d-flex" action="/search" method="get">
+            <input
+            type="text"
+            name="q"
+            placeholder="Søgekriterie"
+            class="form-control"
+            id="searchInput"
+          />          
+            <button
+              type="button"
+              class="btn btn-outline-dark btn-filter"
+              id="searchButton"
+              @click="searchByName"
+            >
+              Søg
+            </button>
+          </form>          
+        </div>
+
+        <div
+          style="
+            overflow-x: auto;
+            height: 500px;
+            max-height: 500px;
+            background-color: rgb(41, 41, 41);
+            position: relative;
+          "
+        >
+          <table class="table table-dark table-bordered table-hover">
+            <thead
+              class="table-warning text"
+              style="position: sticky; top: 0; z-index: 1"
+            >
+              <tr>
+                <td @click="sortTable('studentNumber')">
+                  <b>Student ID</b> {{ sortColumn === 'studentNumber' ? (sortOrder === 1 ? '↑' : '↓') : '' }}
+                </td>
+                <td @click="sortTable('studentName')">
+                  <b>Navn</b> {{ sortColumn === 'studentName' ? (sortOrder === 1 ? '↑' : '↓') : '' }}
+                </td>
+                <td><b>Check Ind</b></td>
+                <td><b>Check Ud</b></td>
+                <td><b>Se Data</b></td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="student in filterList" :key="student.studentId">
+                <td>{{ student.studentNumber }}</td>
+                <td>{{ student.studentName }}</td>
+                <td v-if="student.timeArrived == 0">fraværende check ind</td>
+                <td v-else>{{ student.timeArrived }}</td>
+                <td v-if="student.timeLeft == 0">check ud</td>
+                <td class="text-center" v-else>{{ student.timeLeft}}</td>
+                <td><button @click="viewData(student)">Se Data</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- END: TABLE SETUP -->
+
+      <!-- DAILY CHART -->
+      <div class="container mt-5">
+        <h5 class="text1">I Dag</h5>
+        <canvas id="dailyChart" style="width: 100%"></canvas>
+      </div>
+      <br />
+
+      <!-- WEEKLY CHART -->
+      <div class="container mt-5">
+        <h5 class="text1">Denne Uge</h5>
+        <canvas id="weeklyChart" style="width: 100%"></canvas>
+      </div>
+      <br /><br /><br /><br />
+    </div>
+    <!-- END: APP -->
+
+    <!-- CUSTOM SCRIPTS-->
+    <script src="js/index.js"></script>
+
+    <footer>
+      <div class="container-fluid d-flex justify-content-center mt-3">
+        <a class="" href="">
+          <img
+            src="images/Logo.png"
+            alt="ZealandConnect Logo"
+            id="navHomeLogo"
+            style="width: 80px"
+            class="rounded-pill"
+        /></a>
+        <h5 class="copyright">&copy; 2023</h5>
+      </div>
+    </footer>
+  </body>
+</html>
