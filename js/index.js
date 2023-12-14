@@ -49,7 +49,7 @@ Vue.createApp({
 
     formatUnixTimestamp(timestamp) {
       if(timestamp == 0){
-        return 0;
+        return '00:00';
       }
       const date = new Date(timestamp * 1000); // Convert to milliseconds
       return date.toLocaleDateString('da-DK', { day: 'numeric', month: 'numeric', year: 'numeric' });
@@ -155,8 +155,8 @@ Vue.createApp({
       const hourlyCountsMet = this.countHourlyData(this.presentStudentsByDate, 'timeArrived');
       const hourlyCountsNotMet = this.countHourlyData(this.absentStudentsByDate, 'totalTime');
 
-      console.log(hourlyCountsMet);
-      console.log(hourlyCountsNotMet);
+      console.log("hoursmet",hourlyCountsMet);
+      console.log("HnotMeat", hourlyCountsNotMet);
       const chartOptions = {
         scales: {
           y: {
@@ -211,14 +211,31 @@ Vue.createApp({
     countHourlyData(logs, property) {
       const hourlyCounts = Array.from({ length: 24 }, () => 0);
     
-      logs.forEach(log => {
-        const logTime = new Date(log[property]);
-        const hour = logTime.getHours();
-        hourlyCounts[hour]++;
-      });
+      logs.forEach((log) => {
+        const arrivalTime = log[property].split(':');
+        const arrivalHour = parseInt(arrivalTime[0]);
+        const departureTime = log['timeLeft'] ? log['timeLeft'].split(':') : null;
+        const departureHour = departureTime ? parseInt(departureTime[0]) : null;
     
+        console.log('Arrival Hour:', arrivalHour);
+        console.log('Departure Hour:', departureHour);
+    
+        // Count the student for each hour they are present
+        if (departureHour !== null) {
+          for (let i = arrivalHour; i <= departureHour; i++) {
+            hourlyCounts[i]++;
+          }
+        } else {
+          // Handle the case where timeLeft is undefined (student is still present)
+          hourlyCounts[arrivalHour]++;
+        }
+      });
       return hourlyCounts;
-    },
+    }
+    
+    
+    
+    
   },
 
   mounted(){
