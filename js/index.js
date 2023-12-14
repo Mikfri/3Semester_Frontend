@@ -105,32 +105,25 @@ Vue.createApp({
     },
 
     sortTable(column) {
-      // Implement table sorting based on the selected column
-      if (this.sortColumn === column) {
-        this.sortOrder *= -1; // Toggle between ascending and descending order
+      if (column === this.sortColumn) {
+        this.sortOrder *= -1;
       } else {
+        this.sortOrder = 1;
         this.sortColumn = column;
-        this.sortOrder = 1; // Set default order to ascending
       }
 
-      this.filterList.sort((a, b) => {
-        const aValue = a[column];
-        const bValue = b[column];
+      this.filterList = this.filterList.sort((a, b) => {
+        const valueA = column === 'studentNumber' ? a[column] : a[column];
+        const valueB = column === 'studentNumber' ? b[column] : b[column];
 
-        if (aValue < bValue) {
-          return -1 * this.sortOrder;
-        } else if (aValue > bValue) {
-          return 1 * this.sortOrder;
-        } else {
-          return 0;
-        }
+        return valueA.localeCompare(valueB) * this.sortOrder;
       });
     },
 
     searchByName() {
       // Implement searching by name
       const searchInput = document.getElementById("searchInput").value.toLowerCase();
-      this.filterList = this.activityList.filter((student) =>
+      this.filterList = this.dateActivityLog.filter((student) =>
         student.studentName.toLowerCase().includes(searchInput)
       );
     },
