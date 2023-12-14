@@ -50,7 +50,7 @@
         <form class="date-filter">
           <h5 class="text1">Dato</h5>
           <input id="selectedDate" v-model="selectedDate" type="date">
-          <button class="button" type="button" @click="submitDateForLogs" id="date-button">submit</button>
+          <button class="button" type="button" @click="datePickedFilter" id="date-button">submit</button>
         </form>
       </div>
 
@@ -81,8 +81,7 @@
         <button class="btn btn-outline-dark btn-filter" @click="filterTable('presentStudents')" id="metStudentsButton">
           Mødt
         </button>
-        <button class="btn btn-outline-dark btn-filter" @click="filterTable('absentStudents')"
-          id="missingStudentsButton">
+        <button class="btn btn-outline-dark btn-filter" @click="filterTable('absentStudents')" id="missingStudentsButton">
           Ikke mødt
         </button>
         <form class="d-flex" action="/search" method="get">
@@ -114,7 +113,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="student in dateActivityLog.length > 0 ? dateActivityLog : responseActivityLog" :key="student.studentId">
+            <tr v-for="student in filterList.length > 0 ? filterList : responseActivityLog" :key="student.studentId">
               <td>{{ student.studentNumber }}</td>
               <td>{{ student.studentName }}</td>
               <td v-if="student.timeArrived == 0">fraværende check ind</td>

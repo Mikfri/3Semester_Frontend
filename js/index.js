@@ -46,16 +46,22 @@ Vue.createApp({
     },
 
     formatUnixTimestamp(timestamp) {
+      if(timestamp == 0){
+        return 0;
+      }
       const date = new Date(timestamp * 1000); // Convert to milliseconds
       return date.toLocaleDateString('da-DK', { day: 'numeric', month: 'numeric', year: 'numeric' });
     },
 
     formatTime(timestamp) {
+      if(timestamp == 0){
+        return 0;
+      }
       const date = new Date(timestamp * 1000); // Convert to milliseconds
       return date.toLocaleTimeString('da-DK', { hour: 'numeric', minute: 'numeric'});
     },
 
-    submitDateForLogs() {
+    datePickedFilter() {
       const dateObjectDate = new Date(this.selectedDate);
       const danishDate = dateObjectDate.toLocaleDateString('da-DK');
       this.dateActivityLog = this.responseActivityLog.filter(log => {
@@ -63,32 +69,38 @@ Vue.createApp({
           return log;
         }
       });
+      this.filterList = this.dateActivityLog;
       console.log(this.dateActivityLog);
+      this.updateCounters();
     },
 
     updateCounters() {
-      // Update counters based on the fetched data
-      this.totalStudents = this.activityList.length;
-      this.hereTodayCounter = this.activityList.filter(
-        (student) => student.isPresent === true
-      ).length;
-      this.notHereTodayCounter = this.activityList.filter(
-        (student) => student.isPresent === false
-      ).length;
+      this.totalStudents = this.dateActivityLog.length;
+      this.hereTodayCounter = this.dateActivityLog.reduce((count, log) => {
+        if (log.timeArrived > 0) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+      this.notHereTodayCounter = this.totalStudents - this.hereTodayCounter;
+      console.log("total sudents: ", this.totalStudents, "not here: ", this.notHereTodayCounter, "here: ", this.hereTodayCounter);
     },
 
     filterTable(filterType) {
       // Implement table filtering based on the filter type
+      console.log("filter type: ", filterType)
       if (filterType === "all") {
-        this.filterList = this.activityList;
+        this.filterList = this.dateActivityLog;
       } else if (filterType === "presentStudents") {
-        this.filterList = this.activityList.filter(
-          (student) => student.isPresent === true
-        );
+        this.filterList = this.dateActivityLog.filter((log) => {
+        if(log.timeArrived > 0){
+          return log;
+        }});
       } else if (filterType === "absentStudents") {
-        this.filterList = this.activityList.filter(
-          (student) => student.isPresent === false
-        );
+        this.filterList = this.dateActivityLog.filter((log) => {
+          if(log.timeArrived === 0){
+            return log;
+        }});
       }
     },
 
