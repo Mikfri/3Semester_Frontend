@@ -3,7 +3,7 @@ const apiUrl = "https://zealandconnect.azurewebsites.net/api/Activitydata";
 Vue.createApp({
   data() {
     return {
-      selectedDate: null,
+      selectedDate: new Date().toISOString().slice(0, 10),
       submitDateForm: "dd-MM-yyyy",
       responseActivityLog: [],
       dateActivityLog: [],
@@ -150,19 +150,11 @@ Vue.createApp({
       const xlabes = Array.from({ length: 10}, (_, i) => i + 9);
       console.log("fremmødt", this.presentStudentsByDate);
       console.log("ikke mødt", this.absentStudentsByDate);
-      const hourlyCountsMet = Array.from({ length: 24 }, () => 0);
-      const hourlyCountsNotMet = Array.from({ length: 24 }, () => 0);
  
-      // Count the number of students who have met and not met for each hour
-      this.presentStudentsByDate.forEach(log => {
-        const hour = log.totalTime;
-        hourlyCountsMet[hour]++;
-      });
+      // Count hourly data for both present and absent students
+      const hourlyCountsMet = this.countHourlyData(this.presentStudentsByDate, 'timeArrived');
+      const hourlyCountsNotMet = this.countHourlyData(this.absentStudentsByDate, 'totalTime');
 
-      this.absentStudentsByDate.forEach(log => {
-        const hour = log;
-        hourlyCountsNotMet[hour]++;
-      });
       console.log(hourlyCountsMet);
       console.log(hourlyCountsNotMet);
       const chartOptions = {
@@ -215,6 +207,17 @@ Vue.createApp({
         },
         options: chartOptions, //loads personalized options
       });
+    },
+    countHourlyData(logs, property) {
+      const hourlyCounts = Array.from({ length: 24 }, () => 0);
+    
+      logs.forEach(log => {
+        const logTime = new Date(log[property]);
+        const hour = logTime.getHours();
+        hourlyCounts[hour]++;
+      });
+    
+      return hourlyCounts;
     },
   },
 
