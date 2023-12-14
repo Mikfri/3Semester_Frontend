@@ -8,6 +8,8 @@ Vue.createApp({
       responseActivityLog: [],
       dateActivityLog: [],
       filterList: [],
+      presentStudentsByDate: [], // present students
+      absentStudentsByDate: [],
       singleStudent: null,
       totalStudents: 0,
       hereTodayCounter: 0,
@@ -62,6 +64,7 @@ Vue.createApp({
     },
 
     datePickedFilter() {
+      console.log("before edit: ", this.selectedDate);
       const dateObjectDate = new Date(this.selectedDate);
       const danishDate = dateObjectDate.toLocaleDateString('da-DK');
       this.dateActivityLog = this.responseActivityLog.filter(log => {
@@ -70,19 +73,27 @@ Vue.createApp({
         }
       });
       this.filterList = this.dateActivityLog;
+      console.log(this.selectedDate);
       console.log(this.dateActivityLog);
       this.updateCounters();
+      this.dailyChart();
     },
 
     updateCounters() {
       this.totalStudents = this.dateActivityLog.length;
-      this.hereTodayCounter = this.dateActivityLog.reduce((count, log) => {
+      this.presentStudentsByDate = this.dateActivityLog.filter(log => {
         if (log.timeArrived > 0) {
-          return count + 1;
+          return log;
         }
-        return count;
-      }, 0);
-      this.notHereTodayCounter = this.totalStudents - this.hereTodayCounter;
+      });
+      this.hereTodayCounter = this.presentStudentsByDate.length;
+      // if student is not presset in hereTodayCounter but is in dataAtctivitylog add them to absentStudentsByDate array
+      this.absentStudentsByDate = this.dateActivityLog.filter(log => {
+        if (log.timeArrived === 0) {
+          return log;
+        }
+      });
+      this.notHereTodayCounter = this.absentStudentsByDate.length;
       console.log("total sudents: ", this.totalStudents, "not here: ", this.notHereTodayCounter, "here: ", this.hereTodayCounter);
     },
 
@@ -133,6 +144,83 @@ Vue.createApp({
       this.singleStudent = student;
       // You can add logic to display a modal or another component to show detailed data
     },
+
+    dailyChart() {
+      //customize your prefered chart options
+      const xlabes = Array.from({ length: 10}, (_, i) => i + 9);
+      console.log("fremmødt", this.presentStudentsByDate);
+      console.log("ikke mødt", this.absentStudentsByDate);
+      const hourlyCountsMet = Array.from({ length: 24 }, () => 0);
+      const hourlyCountsNotMet = Array.from({ length: 24 }, () => 0);
+ 
+      // Count the number of students who have met and not met for each hour
+      this.presentStudentsByDate.forEach(log => {
+        const hour = log.totalTime;
+        hourlyCountsMet[hour]++;
+      });
+
+      this.absentStudentsByDate.forEach(log => {
+        const hour = log;
+        hourlyCountsNotMet[hour]++;
+      });
+      console.log(hourlyCountsMet);
+      console.log(hourlyCountsNotMet);
+      const chartOptions = {
+        scales: {
+          y: {
+            ticks: {
+              color: "white", //text color on the y axis
+            },
+            max: this.totalStudents,
+          },
+          x: {
+            ticks: {
+              color: "white", //text color on the x axis
+            },
+          },
+        },
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: "white", //text color on the labels
+            },
+          },
+        },
+      };
+  
+      // Render the chart using Chart.js
+      new Chart("dailyChart", {
+        type: "line",
+        data: {
+          labels: xlabes,
+          datasets: [
+            {
+              data: hourlyCountsMet,
+              backgroundColor: "rgb(50, 150, 150)",
+              borderColor: "rgb(75, 192, 192)",
+              borderWidth: 3,
+              label: "Fremmødt",
+              fill: false,
+            },
+            {
+              data: hourlyCountsNotMet,
+              backgroundColor: "rgb(255, 0, 0)",
+              borderColor: "rgb(255, 100, 100)",
+              borderWidth: 3,
+              label: "Fraværende",
+              fill: false,
+            },
+          ],
+        },
+        options: chartOptions, //loads personalized options
+      });
+    },
   },
+
+  mounted(){
+    //this.dailyChart();
+  }
+
 }).mount("#app");
 
